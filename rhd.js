@@ -1,3 +1,5 @@
+// rhd.js - Reverse HTTP Daemon
+
 var http = require('http'),
     httpProxy = require('http-proxy');
 
@@ -10,4 +12,14 @@ var server = http.createServer(function(req, res) {
 });
 
 console.log("listening on port 8080")
+
+proxy.on('error', function (err, req, res) {
+  res.writeHead(500, {
+      'Content-Type': 'text/plain'
+    });
+
+    res.end('Something went wrong');
+    console.log("Something went wrong.");
+});
+
 server.listen(8080);
