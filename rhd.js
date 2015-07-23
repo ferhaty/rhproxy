@@ -4,6 +4,7 @@ var http = require('http'),
     httpProxy = require('http-proxy');
 var net = require('net');
 var config = require('config');
+var sys = require ('sys');
 
 var brokers = [];
 
@@ -21,27 +22,27 @@ proxy.on('error', function (err, req, res) {
     });
 
     res.end('something went wrong');
-    console.log("[server]: something went wrong.");
+    sys.log('[server]: something went wrong.');
 });
 
 var listenPort = config.get('server.listen_port');
 server.listen(listenPort);
 
-console.log("[server]: listening on port " + listenPort)
+sys.log('[server]: listening on port ' + listenPort)
 
 function createBroker(port){
 
   brokers[port] = net.createServer(function(client) {
-    console.log('[broker %d]: client connected', port);
+    sys.log('[broker %d]: client connected', port);
     client.on('end', function() {
-      console.log('[broker %d]: client disconnected', port);
+      sys.log('[broker %d]: client disconnected', port);
     });
     client.write('hello\r\n');
     client.pipe(client);
   });
 
   brokers[port].listen(port, function() {
-    console.log('[broker: %d]: listening on port %d', port, port);
+    sys.log('[broker: %d]: listening on port %d', port, port);
   });
 
 }
