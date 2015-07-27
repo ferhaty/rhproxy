@@ -27,6 +27,9 @@ function createClient(port){
       'CONNECT %s:%d HTTP/1.1\r\n' +
       'Host: %s:%d\r\n' +
       'Proxy-Authorization: Basic %s\r\n', gateway, port, gateway, port, proxyAuth);
+
+    // connect to the broker
+      
 }
 
 sys.log('proxy enabled... tunneling http requests through %s %d', proxyHost, proxyPort);
