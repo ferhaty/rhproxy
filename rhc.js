@@ -4,6 +4,7 @@ var config = require('config');
 var tunnel = require('tunnel');
 var sys = require('sys');
 var util = require('util');
+var net = require('net');
 
 var proxyHost = config.get('proxy.host');
 var proxyPort = config.get('proxy.port');
@@ -14,7 +15,6 @@ var gateway = config.get('brokers.gateway');
 var clients = [];
 
 function createClient(port){
-    var gateway = config.get('brokers.gateway');
     var proxyAuth = new Buffer(proxyUser + ':' + proxyPass).toString('base64');
 
     sys.log('connecting to %s:%d', gateway, port);
@@ -28,8 +28,28 @@ function createClient(port){
       'Host: %s:%d\r\n' +
       'Proxy-Authorization: Basic %s\r\n', gateway, port, gateway, port, proxyAuth);
 
-    // connect to the broker
-      
+    // connect to the broker through the proxy
+    clients[port] = new net.Socket();
+    connectToBroker(clients[port], function(){
+      sys.log('connected to the proxy %s on port %d', proxyHost, proxyPort);
+      sys.log('sending %s to the server', tunnelCommand);
+      clients[port].write(tunnelCommand);
+    }, onClientData, onClientClose);
+}
+
+function onClientData(data){
+  sys.log('data: ' + data);
+  //client.destroy();
+}
+
+function onClientClose(){
+  sys.log('connection closed');
+}
+
+function connectToBroker(socket, connectCallback, dataCallback, closeCallback){
+  socket.connect(proxyPort, proxyHost, connectCallback);
+  socket.on('data', dataCallback);
+  socket.on('close', closeCallback);
 }
 
 sys.log('proxy enabled... tunneling http requests through %s %d', proxyHost, proxyPort);

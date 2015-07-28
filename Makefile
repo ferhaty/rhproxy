@@ -6,3 +6,4 @@ install:
 	npm install config --save
 	npm install properties --save
 	npm install tunnel --save
+	npm install proxy --save
