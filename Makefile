@@ -7,3 +7,5 @@ install:
 	npm install properties --save
 	npm install tunnel --save
 	npm install proxy --save
+	npm install debug --save
+	npm install node-env-file --save

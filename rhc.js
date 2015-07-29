@@ -26,7 +26,7 @@ function createClient(port){
     var tunnelCommand = util.format(
       'CONNECT %s:%d HTTP/1.1\r\n' +
       'Host: %s:%d\r\n' +
-      'Proxy-Authorization: Basic %s\r\n', gateway, port, gateway, port, proxyAuth);
+      'Proxy-Authorization: Basic %s\r\n\r\n', gateway, port, gateway, port, proxyAuth);
 
     // connect to the broker through the proxy
     clients[port] = new net.Socket();

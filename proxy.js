@@ -1,3 +1,6 @@
+var env = require('node-env-file');
+env(__dirname + '/.env');
+
 var http = require('http');
 var setup = require('proxy');
 
