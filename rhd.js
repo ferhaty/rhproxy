@@ -5,6 +5,20 @@ var http = require('http'),
 var net = require('net');
 var config = require('config');
 var sys = require ('sys');
+var crypto = require('./crypto');
+
+var cryptoKey = config.get('crypto.key');
+var cryptoIv = config.get('crypto.iv');
+
+// var key = new Buffer(cryptoKey, 'hex'),
+// iv = new Buffer(cryptoIv),
+// buf = new Buffer("foo bar"),
+// enc = crypto.encrypt(key, iv, buf);
+// var dec = crypto.decrypt(key, iv, enc);
+//
+// sys.log("encrypt length: ", enc.length);
+// sys.log("encrypt in Base64:", enc.toString('base64'));
+// sys.log("decrypt all: " + dec.toString('utf8'));
 
 var brokers = [];
 var serverClients = [];
@@ -62,6 +76,7 @@ function createBroker(port){
 
 }
 
+// TODO broadcast to socket instead of port
 function broadcast(port, message, sender) {
   sys.log('broadcasting %s to clients on port %d', message.toString().substring(0,40) + '...', port);
    brokerClients[port].forEach(function (client) {
